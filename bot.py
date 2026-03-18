@@ -64,11 +64,12 @@ menu = {
         ("Qulupnay",35000)
     ],
     "🍔 Burger": [
-        ("Burger obichniy",36000),
+        ("Burger obichniy",35000),
         ("Burger sirniy",40000),
         ("Burger dvaynoy",47000),
         ("Burger traynoy",57000),
         ("Burger combo (4X)",120000),
+        ("Burger mini",25000),
         ("Kotlet",17000)
     ],
     "🌭 Xot Dog": [
