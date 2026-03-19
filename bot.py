@@ -176,14 +176,16 @@ def order(message):
     items = cart.get(message.chat.id, [])
     if not items:
         return
+
     total = sum(i[1] for i in items)
     date = datetime.now().strftime("%Y-%m-%d %H:%M")
     text_items = "\n".join([f"{i[0]} - {i[1]}" for i in items])
 
-    # GET USER PHONE AND LOCATION
+    # USER DATA
     cursor.execute("SELECT phone, lat, lon FROM users WHERE user_id=?", (message.chat.id,))
     phone, lat, lon = cursor.fetchone()
 
+    # CHECK (USER + ADMIN + CHANNEL)
     check = f"""
 🧾 CUKUR BURGER
 
@@ -195,19 +197,26 @@ def order(message):
 
 📞 Telefon: {phone}
 
-🍽 Yoqimli ishtaha!
+✅ Buyurtma qabul qilindi!
+Tez orada siz bilan bog‘lanamiz. Aloqada bo‘ling.
 """
-    # SEND CHECK TO USER
+
+    # USERGA
     bot.send_message(message.chat.id, check)
+
     # SAVE ORDER
     cursor.execute("INSERT INTO orders (user_id, items, total, date) VALUES (?,?,?,?)",
                    (message.chat.id, text_items, total, date))
     conn.commit()
-    # SEND TO ADMIN + CHANNEL
+
+    # ADMINGA
     bot.send_message(config.ADMIN_ID, check)
     bot.send_location(config.ADMIN_ID, lat, lon)
+
+    # KANALGA
     bot.send_message(config.ADMIN_CHANNEL, check)
     bot.send_location(config.ADMIN_CHANNEL, lat, lon)
+
     # CLEAR CART
     cart[message.chat.id] = []
 
