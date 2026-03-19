@@ -244,6 +244,11 @@ bot.infinity_polling()
 @bot.message_handler(commands=['send'])
 def broadcast(message):
     if message.chat.id != config.ADMIN_ID:
+        bot.send_message(message.chat.id, "❌ Siz admin emassiz")
+        return
+
+    if len(message.text.split()) < 2:
+        bot.send_message(message.chat.id, "❗ Matn yozing: /send text")
         return
 
     msg = message.text.replace("/send ", "")
@@ -257,7 +262,7 @@ def broadcast(message):
         try:
             bot.send_message(user[0], msg)
             count += 1
-        except:
-            pass
+        except Exception as e:
+            print(e)
 
     bot.send_message(message.chat.id, f"✅ Yuborildi: {count} ta odamga")
