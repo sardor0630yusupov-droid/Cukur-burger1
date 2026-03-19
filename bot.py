@@ -241,3 +241,23 @@ def go_back(message):
     main_menu(message)
 
 bot.infinity_polling()
+@bot.message_handler(commands=['send'])
+def broadcast(message):
+    if message.chat.id != config.ADMIN_ID:
+        return
+
+    msg = message.text.replace("/send ", "")
+
+    cursor.execute("SELECT user_id FROM users")
+    users = cursor.fetchall()
+
+    count = 0
+
+    for user in users:
+        try:
+            bot.send_message(user[0], msg)
+            count += 1
+        except:
+            pass
+
+    bot.send_message(message.chat.id, f"✅ Yuborildi: {count} ta odamga")
